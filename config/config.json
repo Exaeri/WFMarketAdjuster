@@ -1,6 +1,7 @@
 {
     "delays": {
-        "WFMApi": 500
+        "WFMApi": 500,
+        "handlers": 500
     },
     "handlers": {
         "buy": true,

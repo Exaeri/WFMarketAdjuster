@@ -1,6 +1,6 @@
-export default class sellHandler{
+export default class sellHandler {
 
-static async process() {
-console.log('Sell handler');
-}
+    static async process(orders) {
+        console.log(orders);
+    }
 }
