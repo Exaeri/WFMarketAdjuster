@@ -1,0 +1,9 @@
+{
+    "delays": {
+        "WFMApi": 500
+    },
+    "handlers": {
+        "buy": true,
+        "sell": true
+    }
+}
