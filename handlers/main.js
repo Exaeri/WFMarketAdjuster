@@ -2,8 +2,10 @@ import WFMApi from "../WFMApi/WFMApi.js";
 import filterOrders from "../utils/filterOrders.js";
 import config from "../config/adjuster.config.js";
 import { clsColor } from "../utils/utils.js";
-import buyHandler from "./buy.js";
+import BuyHandler from "./buy.js";
+import SellHandler from "./sell.js";
 import userJWT from "../config/userJWT.js";
+import logs from "../config/logsMessages.js";
 export default class mainHandler {
     static #user = null;
     static #buyHandler = true;
@@ -37,7 +39,7 @@ export default class mainHandler {
         if(userJWT === 'YOUR_JWT') 
             throw new Error(`Replace ${clsColor.FgYellow}YOUR_JWT${clsColor.Reset} with your JWT in ${clsColor.FgYellow}./config/userJWT.js${clsColor.Reset}`);
 
-        console.log(`${clsColor.FgCyan}Authenticating...${clsColor.Reset}`);
+        console.log(`${clsColor.FgBlue}Authenticating...${clsColor.Reset}`);
         WFMApi.JWT = userJWT;
 
         let userProfile;
@@ -48,7 +50,7 @@ export default class mainHandler {
             process.exit(1)
         }
 
-        console.log(`${clsColor.FgGreen}[+]${clsColor.Reset} Success: authenticated as ${clsColor.FgGreen}${userProfile.slug}${clsColor.Reset}`);
+        console.log(`${clsColor.FgGreen}[+]${clsColor.Reset} Success: authenticated as ${clsColor.FgCyan}${userProfile.slug}${clsColor.Reset}`);
         this.#user = userProfile;
     }
     static async configInit() {
@@ -62,7 +64,10 @@ export default class mainHandler {
         WFMApi.language = this.#user.locale;
         WFMApi.cooldown = config?.delays?.WFMApi || 750;
         
-        console.log(`${clsColor.FgCyan}Handlers${clsColor.Reset}:`);
+        BuyHandler.language = logs[WFMApi.language] ? WFMApi.language : 'en';
+        SellHandler.language = logs[WFMApi.language] ? WFMApi.language : 'en';
+        
+        console.log(`${clsColor.FgBlue}Handlers:${clsColor.Reset}`);
 
         if(config?.handlers?.buy ?? true) 
             console.log(`${clsColor.FgGreen}[+]${clsColor.Reset} Buy`);
@@ -86,7 +91,8 @@ export default class mainHandler {
         }
     }
     static async process() {
-        console.log(`\n${clsColor.FgCyan}Process started...${clsColor.Reset}`);
+        console.log(`\n${clsColor.FgBlue}Process started:${clsColor.Reset}`);
+        console.log(`----------------`);
 
         let userInfo, allUserOrders;
         try {
@@ -108,10 +114,11 @@ export default class mainHandler {
 
         const { sell: userSellOrders, buy: userBuyOrders } = filterOrders(allUserOrders);
 
-        if(buyHandler && userBuyOrders.length > 0) 
-        await buyHandler.process(userBuyOrders, this.#user.slug);
-        // if(sellHandler && userSellOrders.length > 0) 
-        //     await sellHandler.process(userSellOrders);
+        // if(BuyHandler && userBuyOrders.length > 0) 
+        //     await BuyHandler.process(userBuyOrders, this.#user.slug);
+
+        if(SellHandler && userSellOrders.length > 0) 
+            await SellHandler.process(userSellOrders, this.#user.slug);
 
     }
 }

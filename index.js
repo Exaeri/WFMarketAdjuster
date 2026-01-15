@@ -4,6 +4,7 @@ await mainHandler.authWFM();
 mainHandler.configInit();
 await mainHandler.process();
 
+// setTimeout(() => {}, 2000);
 
 // let userInfo;
 // try {

@@ -6,6 +6,10 @@ const config = {
     handlers: {
         buy: true,
         sell: true
+    },
+    msgBoxNotify: {
+        enabled: true,
+        cooldown: 3000
     }
 }
 
