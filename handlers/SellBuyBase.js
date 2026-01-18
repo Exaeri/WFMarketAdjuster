@@ -1,15 +1,9 @@
 import WFMApi from "../WFMApi/WFMApi.js";
 import filterOrders from "../utils/filterOrders.js";
 import config from "../config/adjuster.config.js";
-import {spawn} from 'child_process';
 export default class SellBuyBase {
     static _skipList = new Set();
     static _handlerInterval = config?.delays?.handlersStep || 1000;
-    static _messageBox = {
-        enabled: config?.msgBoxNotify?.enabled || false, 
-        lastCallTime: 0, 
-        cooldown: config?.msgBoxNotify?.cooldown || 3000
-    };
     static _logsLang = 'en';
 
     static set language(lang) {
@@ -20,43 +14,16 @@ export default class SellBuyBase {
         return this._logsLang;
     }
 
-    static _messageBoxShow(message) {
-        if(!this._messageBox.enabled) return;
+    static _isNewerStamp(dateStr1, dateStr2) {
+        const date1 = new Date(dateStr1);
+        const date2 = new Date(dateStr2);
 
-        const currentTime = Date.now();
-        if (currentTime - this._messageBox.lastCallTime < this._messageBox.cooldown) return;
-        this._messageBox.lastCallTime = currentTime; 
+        return date1.getTime() > date2.getTime();
+    }
 
-        const command = `
-        Add-Type -AssemblyName PresentationCore,PresentationFramework,PresentationFramework;
-        [System.Media.SystemSounds]::Beep.Play();
-        $window = New-Object System.Windows.Window;
-        $window.Topmost = $true;
-        $window.WindowStartupLocation = 'CenterScreen';
-        $window.Title = 'WFM Adjuster - BuyHandler';
-        $window.SizeToContent = 'Width';
-        $window.Height = 100;  # set height
-        $window.ResizeMode = 'NoResize';
-
-        $textBlock = New-Object System.Windows.Controls.TextBlock;
-        $textBlock.Text = '${message}';
-        $textBlock.Margin = '5';
-
-        $button = New-Object System.Windows.Controls.Button;
-        $button.Content = 'Ok';
-        $button.Margin = '5';
-        $button.Width = 100;
-        $button.Add_Click({ $window.Close() });
-
-        $stackPanel = New-Object System.Windows.Controls.StackPanel;
-        $stackPanel.Children.Add($textBlock);
-        $stackPanel.Children.Add($button);
-        $window.Content = $stackPanel;
-
-        $window.ShowDialog() | Out-Null;
-        `;
-        spawn("powershell.exe", ["-Command", command]);
-    } 
+    static _sortByPlatinum(items, descending = false) {
+        return items.sort((a, b) => descending ? b.platinum - a.platinum : a.platinum - b.platinum);
+    }
 
     static async _parseAndFilter(order) {
         const itemSlug = await WFMApi.getItemSlugById(order.itemId);

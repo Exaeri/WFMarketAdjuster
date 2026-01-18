@@ -1,7 +1,7 @@
 {
   "name": "wfmarketadjuster",
   "type": "module",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Some automation to trading on the warframe.market",
   "main": "index.js",
   "scripts": {

@@ -1,7 +1,7 @@
 import WFMApi from "../WFMApi/WFMApi.js";
 import filterOrders from "../utils/filterOrders.js";
 import config from "../config/adjuster.config.js";
-import { clsColor } from "../utils/utils.js";
+import clsColor from "../utils/clsColor.js";
 import BuyHandler from "./buy.js";
 import SellHandler from "./sell.js";
 import userJWT from "../config/userJWT.js";
@@ -10,6 +10,7 @@ export default class mainHandler {
     static #user = null;
     static #buyHandler = true;
     static #sellHandler = true;
+    static #lastUserStatus = null;
 
     /**
      * Authenticates the user in warframe.market API using a JWT key.
@@ -58,7 +59,9 @@ export default class mainHandler {
             console.error(`${clsColor.FgRed}User not authenticated. Exiting...${clsColor.Reset}`);
             process.exit(1);
         }
+
         console.log(`Platform: ${this.#user.platform}\nCrossplay: ${this.#user.crossplay}\nLanguage: ${this.#user.locale}\n`);
+        
         WFMApi.platform = this.#user.platform;
         WFMApi.crossplay = this.#user.crossplay;
         WFMApi.language = this.#user.locale;
@@ -90,10 +93,23 @@ export default class mainHandler {
             process.exit(1);
         }
     }
-    static async process() {
-        console.log(`\n${clsColor.FgBlue}Process started:${clsColor.Reset}`);
-        console.log(`----------------`);
 
+    static #handleUserStatus(status) {
+        const isIngame = status === 'ingame';
+
+        if (status !== this.#lastUserStatus) {
+            if (isIngame) {
+                console.log(`User status on market: ${clsColor.FgGreen}ingame${clsColor.Reset}`);
+            } else {
+                console.log(`User status on market ${clsColor.FgYellow}not ingame${clsColor.Reset}, waiting for change...`);
+            }
+            this.#lastUserStatus = status;
+        }
+
+        return isIngame;
+    }
+
+    static async process() {
         let userInfo, allUserOrders;
         try {
             userInfo = await WFMApi.getUserPublicInfo(this.#user.slug);
@@ -104,20 +120,18 @@ export default class mainHandler {
 
         if(!userInfo || !userInfo.status) {
             console.error(`Invalid user data: ${userInfo}`);
+            return;
         }
 
-        // if(userInfo.status !== 'ingame') {
-        //     console.error(`User is not ingame: ${userInfo.status}`);
-        // }
-        //let allUserOrders;
-
-
+        const ingame = this.#handleUserStatus(userInfo.status);
+        if(!ingame) return;
+        
         const { sell: userSellOrders, buy: userBuyOrders } = filterOrders(allUserOrders);
 
-        // if(BuyHandler && userBuyOrders.length > 0) 
-        //     await BuyHandler.process(userBuyOrders, this.#user.slug);
+        if(this.#buyHandler && userBuyOrders.length > 0) 
+            await BuyHandler.process(userBuyOrders, this.#user.slug);
 
-        if(SellHandler && userSellOrders.length > 0) 
+        if(this.#sellHandler && userSellOrders.length > 0) 
             await SellHandler.process(userSellOrders, this.#user.slug);
 
     }

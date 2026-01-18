@@ -1,7 +1,8 @@
 const config = {
     delays: {
         WFMApi: 500,
-        handlersStep: 500
+        handlersStep: 500,
+        mainProcess: 2000
     },
     handlers: {
         buy: true,
@@ -9,7 +10,12 @@ const config = {
     },
     msgBoxNotify: {
         enabled: true,
-        cooldown: 3000
+        cooldown: 5000
+    },
+    sellHandler : {
+        allowPriceChange: true,
+        reductionLimit: 2,
+        limitGrowing: true
     }
 }
 

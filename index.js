@@ -1,19 +1,35 @@
 import mainHandler from "./handlers/main.js";
+import config from "./config/adjuster.config.js";
+import delay from "./utils/delay.js";
+import clsColor from "./utils/clsColor.js";
+
+let isActive = true;
+const interval = config.delays.mainProcess || 2000;
 
 await mainHandler.authWFM();
 mainHandler.configInit();
-await mainHandler.process();
 
-// setTimeout(() => {}, 2000);
+console.log(`\n${clsColor.FgBlue}Process started:${clsColor.Reset}`);
+console.log(`----------------`);
+while (isActive) {
+    await mainHandler.process();
+    await delay(interval);
+}
 
-// let userInfo;
-// try {
-//     userInfo = await WFMApi.getUserPublicInfo(userSlug);
-// } catch (err) {
-//     console.error(err.message);
-// }
+process.on('SIGINT', () => {
+    console.log('Stopping process...');
+    isActive = false;
+});
 
-// WFMApiConfigure(userInfo);
-// mainHandler.init();
-// mainHandler.process(userInfo);
+process.on('SIGTERM', () => {
+    console.log('Stopping process...');
+    isActive = false;
+});
 
+process.on('uncaughtException', (err) => {
+  console.error(`Uncaught Exception: ${err}`);
+});
+
+process.on('unhandledRejection', (err) => {
+  console.error(`Unhandled Rejection: ${err}`);
+});
