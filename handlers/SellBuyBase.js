@@ -25,6 +25,15 @@ export default class SellBuyBase {
         return items.sort((a, b) => descending ? b.platinum - a.platinum : a.platinum - b.platinum);
     }
 
+    static async _tryModify(id, price, quantity, itemName) {
+        try {
+            await WFMApi.modifyOrder(id, price, quantity);
+        } catch (err) {
+            console.log(`Failed to modify ${itemName}, skipping`);
+            console.debug(err);
+        }
+    }
+
     static async _parseAndFilter(order) {
         const itemSlug = await WFMApi.getItemSlugById(order.itemId);
         const itemName = await WFMApi.getItemNameBySlug(itemSlug);

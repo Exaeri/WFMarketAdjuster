@@ -29,7 +29,7 @@ export default class BuyHandler extends SellBuyBase {
                     if(buyOrder.user?.slug === userSlug) continue;
 
                     if(buyOrder.platinum === userOrder.platinum && this._isNewerStamp(buyOrder.updatedAt, userOrder.updatedAt)) {
-                        WFMApi.modifyOrder(userOrder.id, userOrder.platinum, userOrder.quantity);
+                        await this._tryModify(userOrder.id, userOrder.platinum, userOrder.quantity, itemName);
                         console.log(logs[this.language].BHNewerStamp(itemName, buyOrder.user?.ingameName));
                         break;
                     }

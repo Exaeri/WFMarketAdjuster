@@ -74,7 +74,7 @@ export default class SellHandler extends SellBuyBase {
 
                 if (itemSellOrders[0].user && itemSellOrders[0].user?.slug === userSlug) {
                     if (this.#allowPriceChange && itemSellOrders[1].platinum > userOrder.platinum) {
-                        WFMApi.modifyOrder(userOrder.id, itemSellOrders[1].platinum, userOrder.quantity);
+                        await this._tryModify(userOrder.id, itemSellOrders[1].platinum, userOrder.quantity, itemName);
                         console.log(logs[this.language].SHPriceIncreased(itemName, itemSellOrders[1].platinum));
                         continue;
                     }
@@ -85,13 +85,13 @@ export default class SellHandler extends SellBuyBase {
                     if(sellOrder.user?.slug === userSlug) continue;
 
                     if(this.#shouldReducePrice(userOrder.id, sellOrder.platinum, userOrder.platinum)) {
-                        WFMApi.modifyOrder(userOrder.id, sellOrder.platinum, userOrder.quantity);
+                        await this._tryModify(userOrder.id, sellOrder.platinum, userOrder.quantity, itemName);
                         console.log(logs[this.language].SHPriceChanged(itemName, sellOrder.user?.ingameName, userOrder.platinum - sellOrder.platinum));
                         break;
                     }
 
                     if(sellOrder.platinum === userOrder.platinum && this._isNewerStamp(sellOrder.updatedAt, userOrder.updatedAt)) {
-                        WFMApi.modifyOrder(userOrder.id, userOrder.platinum, userOrder.quantity);
+                        await this._tryModify(userOrder.id, userOrder.platinum, userOrder.quantity, itemName);
                         console.log(logs[this.language].SHNewerStamp(itemName, sellOrder.user?.ingameName));
                         break;
                     }

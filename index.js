@@ -27,9 +27,9 @@ process.on('SIGTERM', () => {
 });
 
 process.on('uncaughtException', (err) => {
-  console.error(`Uncaught Exception: ${err}`);
+  console.error(`Uncaught Exception:`, err);
 });
 
-process.on('unhandledRejection', (err) => {
-  console.error(`Unhandled Rejection: ${err}`);
+process.on('unhandledRejection', (reason) => {
+  console.error(`Unhandled Rejection:`, reason);
 });
