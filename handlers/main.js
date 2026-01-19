@@ -133,6 +133,5 @@ export default class mainHandler {
 
         if(this.#sellHandler && userSellOrders.length > 0) 
             await SellHandler.process(userSellOrders, this.#user.slug);
-
     }
 }

@@ -22,10 +22,19 @@ export default class SellBuyBase {
     }
 
     static _sortByPlatinum(items, descending = false) {
-        return items.sort((a, b) => descending ? b.platinum - a.platinum : a.platinum - b.platinum);
+        return items.sort((a, b) => {
+            const priceDiff = (descending ? b.platinum - a.platinum : a.platinum - b.platinum);
+            if (priceDiff !== 0) return priceDiff;
+
+            const ta = Date.parse(a.updatedAt) || 0;
+            const tb = Date.parse(b.updatedAt) || 0;
+
+            return tb - ta;
+        });
     }
 
     static async _tryModify(id, price, quantity, itemName) {
+        console.log(`Trying to modify ${itemName}`);
         try {
             await WFMApi.modifyOrder(id, price, quantity);
         } catch (err) {

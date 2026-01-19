@@ -71,7 +71,6 @@ export default class SellHandler extends SellBuyBase {
 
             if (itemSellOrders && itemSellOrders.length !== 0) {
                 this._sortByPlatinum(itemSellOrders);
-
                 if (itemSellOrders[0].user && itemSellOrders[0].user?.slug === userSlug) {
                     if (this.#allowPriceChange && itemSellOrders[1].platinum > userOrder.platinum) {
                         await this._tryModify(userOrder.id, itemSellOrders[1].platinum, userOrder.quantity, itemName);
