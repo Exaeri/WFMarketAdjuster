@@ -34,7 +34,6 @@ export default class SellBuyBase {
     }
 
     static async _tryModify(id, price, quantity, itemName) {
-        console.log(`Trying to modify ${itemName}`);
         try {
             await WFMApi.modifyOrder(id, price, quantity);
         } catch (err) {
