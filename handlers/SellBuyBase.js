@@ -37,8 +37,7 @@ export default class SellBuyBase {
         try {
             await WFMApi.modifyOrder(id, price, quantity);
         } catch (err) {
-            console.log(`Failed to modify ${itemName}, skipping`);
-            console.debug(err);
+            console.log(`Failed to modify ${itemName} (${err.code}), skipping`);
         }
     }
 
