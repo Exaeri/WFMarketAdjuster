@@ -47,7 +47,7 @@ export default class mainHandler {
         try {
             userProfile = await WFMApi.getMyProfile();
         } catch (err) {
-            console.error(`${err.message} ${clsColor.FgRed}Exiting...${clsColor.Reset}`);
+            console.error(`${clsColor.FgRed}${err.message}. Exiting...${clsColor.Reset}`);
             process.exit(1)
         }
 
@@ -62,10 +62,17 @@ export default class mainHandler {
 
         console.log(`Platform: ${this.#user.platform}\nCrossplay: ${this.#user.crossplay}\nLanguage: ${this.#user.locale}\n`);
         
-        WFMApi.platform = this.#user.platform;
-        WFMApi.crossplay = this.#user.crossplay;
-        WFMApi.language = this.#user.locale;
-        WFMApi.cooldown = config?.delays?.WFMApi || 750;
+        try {
+            WFMApi.platform = this.#user.platform;
+            WFMApi.crossplay = this.#user.crossplay;
+            WFMApi.language = this.#user.locale;
+            WFMApi.cooldown = config?.delays?.WFMApi || 750;
+        }
+        catch (err) {
+            console.error(`${clsColor.FgRed}${err.message}. Exiting...${clsColor.Reset}`);
+            process.exit(1)
+        }
+
         
         BuyHandler.language = logs[WFMApi.language] ? WFMApi.language : 'en';
         SellHandler.language = logs[WFMApi.language] ? WFMApi.language : 'en';
@@ -119,7 +126,7 @@ export default class mainHandler {
         }
 
         if(!userInfo || !userInfo.status) {
-            console.error(`Invalid user data: ${userInfo}`);
+            console.error(`Got invalid user data. Skipping iteration...`);
             return;
         }
 
