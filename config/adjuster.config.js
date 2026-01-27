@@ -1,7 +1,7 @@
 const config = {
     delays: {
         WFMApi: 500,
-        handlersStep: 500,
+        handlersStep: 250,
         mainProcess: 2000
     },
     handlers: {
