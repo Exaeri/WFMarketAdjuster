@@ -1,8 +1,8 @@
 const config = {
     delays: {
-        WFMApi: 500,
-        handlersStep: 250,
-        mainProcess: 2000
+        WFMApi: 400,
+        handlersStep: 100,
+        mainProcess: 500
     },
     handlers: {
         buy: true,

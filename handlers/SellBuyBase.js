@@ -51,11 +51,11 @@ export default class SellBuyBase {
         }
         catch (err) {
             console.error(`Error while fetching orders for item: ${itemName}`, err);
-            return; 
+            return null; 
         }
         if(!allItemOrders || allItemOrders.length === 0) {
             console.warn(`No orders found for item: ${itemName}`);
-            return;
+            return null;
         }
         const { sell: itemSellOrders, buy: itemBuyOrders } = filterOrders(allItemOrders, { filterStatus: 'ingame', filterRank: order.rank });
         return { itemName, itemSellOrders, itemBuyOrders };

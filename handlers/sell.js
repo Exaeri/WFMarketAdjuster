@@ -52,7 +52,9 @@ export default class SellHandler extends SellBuyBase {
         }
 
         for (const userOrder of userSellOrders) {
-            const { itemName, itemSellOrders, itemBuyOrders } = await this._parseAndFilter(userOrder);
+            const filtered = await this._parseAndFilter(userOrder);
+            if (!filtered) continue;
+            const { itemName, itemSellOrders, itemBuyOrders } = filtered;
 
             if(!this.#initPrices.has(userOrder.id)) 
                 this.#initPrices.set(userOrder.id, userOrder.platinum);

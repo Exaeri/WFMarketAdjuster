@@ -7,7 +7,9 @@ import messageBox from "../utils/msgBox.js";
 export default class BuyHandler extends SellBuyBase {
     static async process(userBuyOrders, userSlug) {
         for (const userOrder of userBuyOrders) {
-            const { itemName, itemSellOrders, itemBuyOrders } = await this._parseAndFilter(userOrder);
+            const filtered = await this._parseAndFilter(userOrder);
+            if (!filtered) continue;
+            const { itemName, itemSellOrders, itemBuyOrders } = filtered;
 
             if (itemSellOrders && itemSellOrders.length !== 0) {
                 for (const sellOrder of itemSellOrders) {
