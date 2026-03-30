@@ -122,7 +122,8 @@ export default class mainHandler {
             userInfo = await WFMApi.getUserPublicInfo(this.#user.slug);
             allUserOrders = await WFMApi.getMyOrders();
         } catch (err) {
-            console.error(err.message);
+            console.error(`Requesting error: ${err.message}. Skipping iteration...`);
+            return;
         }
 
         if(!userInfo || !userInfo.status) {

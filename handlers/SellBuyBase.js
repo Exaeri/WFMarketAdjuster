@@ -50,11 +50,11 @@ export default class SellBuyBase {
             allItemOrders = await WFMApi.getItemOrders(itemSlug);
         }
         catch (err) {
-            console.error(`Error while fetching orders for item: ${itemName}`, err);
+            console.error(`Error while fetching orders for item ${itemName}:\n${err.message}. Skipping iteration...`);
             return null; 
         }
         if(!allItemOrders || allItemOrders.length === 0) {
-            console.warn(`No orders found for item: ${itemName}`);
+            console.warn(`No orders found for item: ${itemName}, skipping iteration...`);
             return null;
         }
         const { sell: itemSellOrders, buy: itemBuyOrders } = filterOrders(allItemOrders, { filterStatus: 'ingame', filterRank: order.rank });
