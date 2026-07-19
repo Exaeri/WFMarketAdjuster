@@ -42,6 +42,7 @@ export default class mainHandler {
 
         console.log(`${clsColor.FgBlue}Authenticating...${clsColor.Reset}`);
         WFMApi.JWT = userJWT;
+        WFMApi.userAgent = config?.userAgent || 'PostmanRuntime/7.53.0'
 
         let userProfile;
         try {
@@ -54,6 +55,7 @@ export default class mainHandler {
         console.log(`${clsColor.FgGreen}[+]${clsColor.Reset} Success: authenticated as ${clsColor.FgCyan}${userProfile.slug}${clsColor.Reset}`);
         this.#user = userProfile;
     }
+
     static async configInit() {
         if(!this.#user) {
             console.error(`${clsColor.FgRed}User not authenticated. Exiting...${clsColor.Reset}`);

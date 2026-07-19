@@ -15,6 +15,15 @@ export default class BuyHandler extends SellBuyBase {
                 for (const sellOrder of itemSellOrders) {
                     if (this._skipList.has(sellOrder.user?.id) || sellOrder.user?.slug === userSlug) continue;
 
+                    if(sellOrder.perTrade > 1 && userOrder.quantity >= sellOrder.perTrade) {
+                        let costPerOne = sellOrder.platinum / sellOrder.perTrade;
+                        if(costPerOne <= userOrder.platinum) {
+                            console.log(logs[this.language].BHBulkFound(itemName, sellOrder.user?.ingameName));
+                            messageBox(logs[this.language].BHBulkFoundMsgBox(itemName, sellOrder.user?.ingameName));
+                            this._skipList.add(sellOrder.user?.id);
+                        }
+                    }
+                        
                     if (sellOrder.platinum <= userOrder.platinum) {
                         console.log(logs[this.language].BHSellerFound(itemName, sellOrder.user?.ingameName));
                         messageBox(logs[this.language].BHSellerFoundMsgBox(itemName, sellOrder.user?.ingameName));

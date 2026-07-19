@@ -26,14 +26,22 @@ const logs = {
         `${time()}${buyHandler} ${itemColor(item)} with preferred price on sale from ${userColor(seller)}.`,
         BHSellerFoundMsgBox: (item, seller) =>
         `The ${item} with preferred price on sale from ${seller}`,
+
+        BHBulkFound: (item, seller) =>
+        `${time()}${buyHandler} ${itemColor(item)} with preferred price on BULK SALE from ${userColor(seller)}.`,
+        BHBulkFoundMsgBox: (item, seller) =>
+        `Предмет ${item} with preferred price on BULK SALE from ${seller}`,
+
         SHBuyerFound: (item, buyer) =>
         `${time()}${sellHandler} A potential buyer for the ${itemColor(item)} with name ${userColor(buyer)}.`,
         SHBuyerFoundMsgBox: (item, buyer) =>
         `A potential buyer for the ${item} has been found with name ${buyer}.`,
+
         BHNewerStamp: (item, buyer) =>
         `${time()}${buyHandler} ${userColor(buyer)} had a newer timestamp for the ${itemColor(item)}.`,
         SHPriceIncreased: (item, price) =>
         `${time()}${sellHandler} The price of ${itemColor(item)} has been increased to ${userColor(price)}.`,
+
         SHNewerStamp: (item, seller) =>
         `${time()}${sellHandler} ${userColor(seller)} had a newer timestamp for the ${itemColor(item)}.`,
         SHPriceChanged: (item, seller, diff) =>
@@ -44,14 +52,22 @@ const logs = {
         `${time()}${buyHandler} ${itemColor(item)} по искомой цене в продаже у ${userColor(seller)}.`,
         BHSellerFoundMsgBox: (item, seller) =>
         `Предмет ${item} по искомой цене в продаже у ${seller}`,
+
+        BHBulkFound: (item, seller) =>
+        `${time()}${buyHandler} ${itemColor(item)} МАССОВАЯ ПРОДАЖА по искомой цене у ${userColor(seller)}.`,
+        BHBulkFoundMsgBox: (item, seller) =>
+        `Предмет ${item} МАССОВАЯ ПРОДАЖА по искомой цене у ${seller}`,
+
         SHBuyerFound: (item, buyer) =>
         `${time()}${sellHandler} Для ${itemColor(item)} найден потенциальный покупатель с ником ${userColor(buyer)}.`,
         SHBuyerFoundMsgBox: (item, buyer) =>
         `Для ${item} найден потенциальный покупатель с ником ${buyer}.`,
+
         BHNewerStamp: (item, buyer) =>
         `${time()}${buyHandler} ${itemColor(item)} был выше в списке у ${userColor(buyer)}.`,
         SHPriceIncreased: (item, price) =>
         `${time()}${sellHandler} Цена на ${itemColor(item)} была увеличена до ${userColor(price)}.`,
+
         SHNewerStamp: (item, seller) =>
         `${time()}${sellHandler} ${itemColor(item)} был выше в списке у ${userColor(seller)}.`,
         SHPriceChanged: (item, seller, diff) =>
