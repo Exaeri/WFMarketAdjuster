@@ -64,5 +64,6 @@ One of the following methods:<br>
 Run start.bat<br>
 <code>node index.js</code><br>
 <code>npm start</code>
-
+<br><br>
+<a href="https://deepwiki.com/Exaeri/WFMarketAdjuster">DeepWiki</a>
 
